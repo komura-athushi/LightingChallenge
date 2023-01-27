@@ -13,12 +13,14 @@ private:
 	struct LightData {
 		//ライトの色
 		Vector3 lightColor;
-		//to do1 ライトの方向を追加
-		//パディングが必要です
-
-		//to do2 カメラ座標を追加
-		//パディングが必要です
-
+		//パディング
+		int pad;
+		//ライトの方向
+		Vector3 lightDirection;
+		//パディング
+		int pad1;
+		//カメラ座標
+		Vector3	eyePos;
 	};
 	LightData		m_lightData;
 

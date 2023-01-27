@@ -10,10 +10,11 @@ bool Game::Start()
 
 	//ライトの色を設定。
 	m_lightData.lightColor = { 1.5f,1.5f,1.5f };
-	//to do1 ライトの方向を設定。
-	
-	//to do2 カメラ座標を設定。
-
+	//ライトの方向を設定。
+	m_lightData.lightDirection = { 1,-1,-1 };
+	m_lightData.lightDirection.Normalize();
+	//カメラ座標を設定。
+	m_lightData.eyePos = g_camera3D->GetPosition();
 
 	//定数バッファを設定。
 	modelInitData.m_expandConstantBuffer = &m_lightData;

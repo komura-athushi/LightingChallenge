@@ -17,10 +17,10 @@ cbuffer ModelCb : register(b0){
 cbuffer LightDataCb : register(b1) {
 	//ライトの色。
 	float3 lightColor;
-	//to do1 ライトの方向を追加
-
-	//to do2 カメラの座標を追加
-
+	//ライトの方向
+	float3 lightDirection;
+	//カメラの座標
+	float3 eyePos;
 }
 
 
@@ -123,11 +123,29 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
 	//テクスチャから色をサンプリング。
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 
-	//to do1 Lambert拡散反射光を実装してみよう
-	//法線は「psIn.normal」で取得できます。
+	//拡散反射光を計算。
+	float t = dot(psIn.normal, lightDirection);
+	if (t < 0.0f)
+	{
+		t = 0.0f;
+	}
+	float3 lig = lightColor * t;
 
-	//to do2 Phong鏡面反射光を実装してみよう
-	//サーフェイス座標は「psIn.worldPos」で取得できます。
+	//鏡面反射光を計算。
+	float3 refVec = reflect(lightDirection, psIn.normal);
+	float3 toEye = eyePos - psIn.worldPos;
+	toEye = normalize(toEye);
+	 t = dot(refVec, toEye);
+	if (t < 0.0f)
+	{
+		t = 0.0f;
+	}
+	t = pow(t, 5.0f);
+	float3 specular = lightColor * t;
+	lig += specular;
+
+	//ライティング結果をテクスチャカラーに乗算。
+	albedoColor.xyz *= lig;
 
 
 	//計算した結果の最終的なカラーを返す。
